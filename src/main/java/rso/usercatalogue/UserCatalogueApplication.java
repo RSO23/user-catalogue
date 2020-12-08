@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -39,6 +40,8 @@ public class UserCatalogueApplication {
 		ApplicationContext applicationContext = contextRefreshedEvent.getApplicationContext();
 		String dbUrl = applicationContext.getEnvironment().getProperty("spring.datasource.url");
 		log.info("Connected to postgres: " + dbUrl);
+
+		MDC.put("applicationName", applicationContext.getId());
 	}
 
 	@Bean
@@ -59,8 +62,8 @@ public class UserCatalogueApplication {
 
 	private ApiInfo apiDetails() {
 		return new ApiInfo(
-				"Stockbotics API",
-				"This is a private API for Stockbotics application",
+				"User catalogue API",
+				"This is a private API for League of Legends predictor application",
 				"1.0",
 				"Students license",
 				new Contact("Jakob Maležič", "https://github.com/Blarc", "jm6421@student.uni-lj.si"),

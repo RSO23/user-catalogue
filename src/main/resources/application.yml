@@ -3,6 +3,10 @@ isProd: false
 server:
   port: 8084
 
+my:
+  swagger:
+    prefix:
+
 spring:
   application:
     name: user-catalogue
@@ -53,5 +57,9 @@ management:
 ---
 spring:
   profiles: prod
+
+my:
+  swagger:
+    prefix: user-catalogue
 
 isProd: true
