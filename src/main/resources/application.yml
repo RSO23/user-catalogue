@@ -1,0 +1,57 @@
+isProd: false
+
+server:
+  port: 8084
+
+spring:
+  application:
+    name: user-catalogue
+  datasource:
+    url: jdbc:postgresql://ec2-54-170-100-209.eu-west-1.compute.amazonaws.com:5432/d4hc7el2e5scq1
+    username: yodhkytceiopau
+    password: bbcb1c6716a1d8601d7b545a0c7ed5cbf3dee66e0208a3c22b879a52715880ad
+    driverClassName: org.postgresql.Driver
+    initialize: true
+    initialization-mode: always
+    hikari:
+      connectionTimeout: 200000
+      maximumPoolSize: 10
+      idle-timeout: 300000
+      minimum-idle: 1
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    open-in-view: false
+    properties:
+      hibernate:
+        temp:
+          use_jdbc_metadata_defaults: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  data:
+    jpa:
+      repositories:
+        bootstrap_mode: default
+  cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
+
+# Show details of health endpoint
+management:
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+  health:
+    diskspace:
+      enabled: true
+    db:
+      enabled: true
+
+---
+spring:
+  profiles: prod
+
+isProd: true
