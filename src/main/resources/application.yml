@@ -60,6 +60,6 @@ spring:
 
 my:
   swagger:
-    prefix: user-catalogue
+    prefix: /user-catalogue
 
 isProd: true

@@ -17,7 +17,7 @@ spec:
         app: user-catalogue
     spec:
       containers:
-        - image: blarc/rso-user-catalogue:latest
+        - image: blarc/rso-user-catalogue:24deb18
           name: user-catalogue
           ports:
             - containerPort: 8084
@@ -28,13 +28,13 @@ spec:
             httpGet:
               path: /actuator/health/liveness
               port: server
-            initialDelaySeconds: 90
+            initialDelaySeconds: 180
             periodSeconds: 3
           readinessProbe:
             httpGet:
               path: /actuator/health/readiness
               port: server
-            initialDelaySeconds: 90
+            initialDelaySeconds: 180
             periodSeconds: 3
 
 ---
