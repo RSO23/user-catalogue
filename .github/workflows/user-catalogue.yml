@@ -41,6 +41,4 @@ jobs:
           cluster-name: rso23-test
       - name: Deploy to Kubernetes
         run: |
-          kubectl scale deployment user-catalogue-deployment --replicas=0
           kubectl set image deployment/user-catalogue-deployment user-catalogue=${{ secrets.DOCKERHUB_USERNAME }}/rso-user-catalogue:$(git rev-parse --short "$GITHUB_SHA")
-          kubectl scale deployment user-catalogue-deployment --replicas=1
