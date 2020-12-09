@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class UserDto
 {
-    @ApiModelProperty(value = "Id", notes = "User's id.")
+    @ApiModelProperty(value = "Id", notes = "User's id.", hidden = true)
     private Long id;
 
     @ApiModelProperty(value = "Name", notes = "User's full name.", position = 1)

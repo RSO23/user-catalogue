@@ -19,6 +19,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import lombok.RequiredArgsConstructor;
+import rso.usercatalogue.dto.AuthDto;
 import rso.usercatalogue.dto.UserDto;
 import rso.usercatalogue.entity.User;
 import rso.usercatalogue.exception.ApiRequestException;
@@ -44,10 +45,10 @@ public class UserController
         return userService.getById(id).orElseThrow(() -> new ApiRequestException("User with specified id does not exist!"));
     }
 
-    @GetMapping(path = "/auth/{username}")
-    @ApiOperation(value = "Returns the user with specified username.", authorizations = {@Authorization(value = "JWT")})
-    public User getUserAuth(@PathVariable("username") String username) {
-        return userService.getByUsername(username);
+    @GetMapping(path = "/auth/{email}")
+    @ApiOperation(value = "Returns the user with specified email.", authorizations = {@Authorization(value = "JWT")})
+    public AuthDto getUserAuth(@PathVariable("email") String email) {
+        return userService.getAuthDtoByEmail(email);
     }
 
     @PostMapping

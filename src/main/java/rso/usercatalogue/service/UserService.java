@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import rso.usercatalogue.dto.AuthDto;
 import rso.usercatalogue.dto.UserDto;
 import rso.usercatalogue.entity.User;
 import rso.usercatalogue.exception.ApiRequestException;
@@ -51,8 +52,14 @@ public class UserService
         return userRepository.findAll();
     }
 
-    public User getByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public AuthDto getAuthDtoByEmail(String username) {
+        return userRepository.findByEmail(username).map(user -> {
+            AuthDto authDto = new AuthDto();
+            authDto.setId(user.getId());
+            authDto.setEmail(user.getEmail());
+            authDto.setPassword(user.getPassword());
+            return authDto;
+        }).orElseThrow(() -> new ApiRequestException("User with this email doesn't exist."));
     }
 
     public User update(Long id, UserDto userDto) {
@@ -96,7 +103,7 @@ public class UserService
     }
 
     private boolean emailExist(String email) {
-        return userRepository.findByEmail(email) != null;
+        return userRepository.findByEmail(email).isPresent();
     }
 
     private boolean usernameExist(String username) {
