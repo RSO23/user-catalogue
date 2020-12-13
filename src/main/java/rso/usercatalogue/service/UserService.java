@@ -2,6 +2,7 @@ package rso.usercatalogue.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import rso.usercatalogue.dto.AuthDto;
 import rso.usercatalogue.dto.UserDto;
 import rso.usercatalogue.entity.User;
 import rso.usercatalogue.exception.ApiRequestException;
+import rso.usercatalogue.mapper.UserMapper;
 import rso.usercatalogue.repository.UserRepository;
 
 @Service
@@ -27,11 +29,12 @@ public class UserService
 
     private final PasswordEncoder passwordEncoder;
 
-    public Optional<User> getById(Long id) {
-        return userRepository.findById(id).or(() -> userRepository.findById(id));
+    public UserDto getById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new ApiRequestException("User with specified id does not exist!"));
+        return UserMapper.mapToDto(user);
     }
 
-    public User create(UserDto userDto) {
+    public UserDto create(UserDto userDto) {
         if (!userDto.getEmail().matches(EMAIL_REGEX)) {
             throw new ApiRequestException("Invalid email.");
         } else if (emailExist(userDto.getEmail())) {
@@ -45,11 +48,12 @@ public class UserService
         user.setUsername(userDto.getUsername());
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        return UserMapper.mapToDto(savedUser);
     }
 
-    public List<User> getAll() {
-        return userRepository.findAll();
+    public List<UserDto> getAll() {
+        return userRepository.findAll().stream().map(UserMapper::mapToDto).collect(Collectors.toList());
     }
 
     public AuthDto getAuthDtoByEmail(String username) {
@@ -62,12 +66,13 @@ public class UserService
         }).orElseThrow(() -> new ApiRequestException("User with this email doesn't exist."));
     }
 
-    public User update(Long id, UserDto userDto) {
+    public UserDto update(Long id, UserDto userDto) {
         Optional<User> userToBeUpdated = userRepository.findById(id);
-        return userToBeUpdated.map(user -> {
+        User updatedUser = userToBeUpdated.map(user -> {
             setUserAttributes(user, userDto);
             return userRepository.save(user);
         }).orElseThrow(() -> new ApiRequestException("User with this id already exists."));
+        return UserMapper.mapToDto(updatedUser);
     }
 
     public void delete(Long id) {
@@ -82,7 +87,7 @@ public class UserService
 
         if (userDto.getUsername() != null && !userDto.getUsername().isBlank()) {
             if (!userDto.getUsername().equals(user.getUsername()) && usernameExist(userDto.getUsername())) {
-                throw new ApiRequestException("Uporabniško ime že obstaja.");
+                throw new ApiRequestException("Username already exists.");
             } else {
                 user.setUsername(userDto.getUsername());
             }
@@ -90,9 +95,9 @@ public class UserService
 
         if (userDto.getEmail() != null) {
             if (!userDto.getEmail().matches(EMAIL_REGEX)) {
-                throw new ApiRequestException("Neveljaven elektronski naslov.");
+                throw new ApiRequestException("Invalid email.");
             } else if (!userDto.getEmail().equals(user.getEmail()) && emailExist(userDto.getEmail())) {
-                throw new ApiRequestException("Elektronski naslov že obstaja.");
+                throw new ApiRequestException("Email already exists.");
             } else {
                 user.setEmail(userDto.getEmail());
             }

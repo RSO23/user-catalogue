@@ -1,27 +1,27 @@
 package rso.usercatalogue.entity;
 
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.Setter;
 
-
+@Entity
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Table(name = "_user")
-@Entity
 public class User
 {
     @Id
@@ -46,4 +46,12 @@ public class User
     @Email(message = "Email must be valid.")
     @Column(unique = true)
     private String email;
+
+    @OneToMany(
+            targetEntity = GameAccount.class,
+            cascade = CascadeType.ALL,
+            mappedBy = "user",
+            fetch = FetchType.LAZY
+    )
+    private Set<GameAccount> gameAccounts;
 }
