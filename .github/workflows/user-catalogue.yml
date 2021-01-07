@@ -41,7 +41,7 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS_TEST }}
           resource-group: ${{ secrets.RESOURCE_GROUP_TEST}}
-          cluster-name: rso23-test
+          cluster-name: rso23
       - name: Deploy to Kubernetes
         run: |
           kubectl set image deployment/user-catalogue-deployment user-catalogue=${{ secrets.DOCKERHUB_USERNAME }}/rso-user-catalogue:$(git rev-parse --short "$GITHUB_SHA")
