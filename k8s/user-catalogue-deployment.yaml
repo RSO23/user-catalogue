@@ -36,7 +36,12 @@ spec:
               port: server
             initialDelaySeconds: 90
             periodSeconds: 3
-
+          env:
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: user-catalogue-db-password
+                  key: spring_datasource_password
 ---
 
 apiVersion: v1
